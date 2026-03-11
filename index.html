@@ -14,25 +14,11 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --success: #10b981;
+            --warning: #f59e0b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 20px; 
-        }
-        .container { 
-            background-color: var(--card-bg); 
-            border-radius: 12px; 
-            padding: 40px; 
-            width: 100%; 
-            max-width: 500px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-        }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background-color: var(--card-bg); border-radius: 12px; padding: 40px; width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { font-size: 24px; font-weight: 600; margin-bottom: 10px; color: #fff; }
         .header p { color: var(--text-muted); font-size: 14px; }
@@ -40,88 +26,38 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #cbd5e1; font-weight: 500; }
         .form-group input, .form-group select { 
-            width: 100%; 
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            border: 1px solid #334155; 
-            background-color: #0f172a; 
-            color: #fff; 
-            font-size: 14px; 
-            outline: none; 
-            transition: border 0.3s; 
+            width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #334155; 
+            background-color: #0f172a; color: #fff; font-size: 14px; outline: none; transition: border 0.3s; 
         }
         .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
         
         .btn { 
-            width: 100%; 
-            padding: 14px; 
-            background-color: var(--primary); 
-            color: #fff; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: background-color 0.3s; 
-            margin-top: 10px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+            width: 100%; padding: 14px; background-color: var(--primary); color: #fff; 
+            border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; 
+            transition: background-color 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
         }
         .btn:hover { background-color: var(--primary-hover); }
         
         .result-box { 
-            margin-top: 30px; 
-            display: none; 
-            background-color: #0f172a; 
-            border: 1px dashed var(--primary); 
-            padding: 15px; 
-            border-radius: 8px; 
-            position: relative; 
-            animation: fadeIn 0.5s;
+            margin-top: 30px; display: none; background-color: #0f172a; border: 1px dashed var(--primary); 
+            padding: 15px; border-radius: 8px; position: relative; animation: fadeIn 0.5s;
         }
         .result-box h3 { font-size: 14px; margin-bottom: 10px; color: var(--primary); }
         .result-box textarea { 
-            width: 100%; 
-            height: 70px; 
-            background: transparent; 
-            border: none; 
-            color: var(--success); 
-            resize: none; 
-            font-family: monospace; 
-            outline: none; 
-            font-size: 13px;
+            width: 100%; height: 80px; background: transparent; border: none; color: var(--success); 
+            resize: none; font-family: monospace; outline: none; font-size: 13px; line-height: 1.4;
         }
         
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .btn-small {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            color: #fff;
-            transition: 0.2s;
-        }
+        .actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-small { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; text-align: center; text-decoration: none; color: #fff; transition: 0.2s; }
         .btn-copy { background: #334155; }
         .btn-copy:hover { background: #475569; }
         .btn-download { background: var(--success); }
         .btn-download:hover { background: #059669; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .info-note { font-size: 12px; color: var(--warning); margin-top: 15px; text-align: center; display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -129,7 +65,7 @@
 <div class="container">
     <div class="header">
         <h1><i class="fa-solid fa-server"></i> Busca Servidor IPTV</h1>
-        <p>Gere listas M3U reais a partir das credenciais do servidor</p>
+        <p>Gere listas M3U reais a partir das credenciais</p>
     </div>
 
     <form id="iptvForm">
@@ -146,14 +82,21 @@
             <input type="text" id="password" placeholder="Digite a senha" required>
         </div>
         <div class="form-group">
+            <label for="contentType">Conteúdo da Lista</label>
+            <select id="contentType">
+                <option value="live">Apenas TV Ao Vivo (Sem VOD)</option>
+                <option value="all">Completa (TV Ao Vivo + Filmes + Séries)</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="outputType">Formato de Saída</label>
             <select id="outputType">
-                <option value="ts">MPEGTS (.ts) - Padrão IPTV</option>
-                <option value="m3u8">HLS (.m3u8) - Web e Mobile</option>
+                <option value="m3u8">HLS (.m3u8) - Mais rápido / Mobile</option>
+                <option value="ts">MPEGTS (.ts) - Padrão Smart TV</option>
             </select>
         </div>
         <button type="button" class="btn" onclick="generateList()">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Lista Real
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Lista M3U
         </button>
     </form>
 
@@ -169,6 +112,7 @@
                 <i class="fa-solid fa-download"></i> Baixar .m3u
             </a>
         </div>
+        <p class="info-note" id="liveNote"><i class="fa-solid fa-circle-info"></i> Nota: A remoção de Filmes/Séries via link depende do seu servidor aceitar os parâmetros restritivos.</p>
     </div>
 </div>
 
@@ -177,40 +121,44 @@
         let server = document.getElementById('serverUrl').value.trim();
         let user = document.getElementById('username').value.trim();
         let pass = document.getElementById('password').value.trim();
+        let content = document.getElementById('contentType').value;
         let type = document.getElementById('outputType').value;
 
         if(!server || !user || !pass) {
-            alert("Por favor, preencha todos os dados do servidor (URL, Usuário e Senha).");
+            alert("Por favor, preencha URL, Usuário e Senha.");
             return;
         }
 
-        // Verifica e ajusta a barra final se existir
-        if(server.endsWith('/')) {
-            server = server.slice(0, -1);
-        }
+        if(server.endsWith('/')) server = server.slice(0, -1);
+        if(!server.startsWith('http://') && !server.startsWith('https://')) server = 'http://' + server;
 
-        // Adiciona http:// se não foi fornecido para evitar falhas de protocolo
-        if(!server.startsWith('http://') && !server.startsWith('https://')) {
-            server = 'http://' + server;
-        }
-
-        // Padrão de extração para geradores reais Xtream Codes / M3U
+        // Base da URL Xtream Codes
         let generatedUrl = `${server}/get.php?username=${user}&password=${pass}&type=m3u_plus&output=${type}`;
+
+        // Se o usuário quiser apenas TV Ao Vivo, injetamos os parâmetros bloqueadores de VOD
+        if(content === 'live') {
+            generatedUrl += "&vod=0&series=0&movies=0";
+            document.getElementById('liveNote').style.display = 'block';
+        } else {
+            document.getElementById('liveNote').style.display = 'none';
+        }
 
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resultText').value = generatedUrl;
         
-        // Configura o link de download
         let downloadBtn = document.getElementById('downloadBtn');
         downloadBtn.href = generatedUrl;
+        
+        // Define um nome de arquivo diferente caso seja só TV
+        downloadBtn.download = content === 'live' ? "tv_ao_vivo.m3u" : "lista_completa.m3u";
     }
 
     function copyResult() {
         let resultText = document.getElementById('resultText');
         resultText.select();
-        resultText.setSelectionRange(0, 99999); // Para dispositivos móveis
+        resultText.setSelectionRange(0, 99999);
         document.execCommand("copy");
-        alert("URL da lista copiada com sucesso para a sua área de transferência!");
+        alert("URL copiada! Cole no player do cliente.");
     }
 </script>
 
