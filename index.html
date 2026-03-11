@@ -3,35 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gerador de Listas IPTV - Padrão Universal</title>
+    <title>Gerador e Extrator de Live TV - M3U</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --primary-hover: #2563eb; --text-main: #f8fafc; --text-muted: #94a3b8; --success: #10b981; }
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --text-main: #f8fafc; --success: #10b981; --warning: #f59e0b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         .container { background-color: var(--card-bg); border-radius: 12px; padding: 30px; width: 100%; max-width: 500px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); margin: auto; }
         .header { text-align: center; margin-bottom: 25px; }
-        .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; color: #fff; }
-        .header p { color: var(--text-muted); font-size: 14px; }
-        
+        .header h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .header p { color: #94a3b8; font-size: 14px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; font-weight: 500; }
-        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #334155; background-color: #0f172a; color: #fff; font-size: 14px; outline: none; transition: border 0.2s; -webkit-appearance: none; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
-        
-        .btn { width: 100%; padding: 14px; background-color: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn:hover { background-color: var(--primary-hover); }
-        .btn:active { transform: scale(0.98); }
-        
-        .result-box { margin-top: 25px; display: none; background-color: rgba(15, 23, 42, 0.8); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; }
-        .result-box h3 { font-size: 14px; margin-bottom: 10px; color: var(--primary); }
-        .result-box textarea { width: 100%; height: 75px; background: transparent; border: none; color: var(--success); resize: none; font-family: monospace; outline: none; font-size: 13px; line-height: 1.4; word-break: break-all; }
-        
-        .actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        .btn-small { flex: 1; min-width: 120px; padding: 12px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; text-align: center; text-decoration: none; color: #fff; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
-        .btn-copy { background: #334155; }
-        .btn-copy:hover { background: #475569; }
-        .btn-download { background: var(--success); }
+        .form-group input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #334155; background-color: #0f172a; color: #fff; font-size: 14px; outline: none; transition: border 0.2s; }
+        .form-group input:focus { border-color: var(--primary); }
+        .btn { width: 100%; padding: 14px; background-color: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
+        .btn:hover { background-color: #2563eb; }
+        .btn:disabled { background-color: #475569; cursor: not-allowed; }
+        .status { margin-top: 15px; font-size: 13px; text-align: center; color: var(--warning); display: none; }
+        .result-box { margin-top: 20px; display: none; background-color: rgba(15, 23, 42, 0.8); border: 1px dashed var(--success); padding: 15px; border-radius: 8px; text-align: center; }
+        .btn-download { display: inline-block; width: 100%; padding: 12px; background: var(--success); color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }
         .btn-download:hover { background: #059669; }
     </style>
 </head>
@@ -39,100 +30,108 @@
 
 <div class="container">
     <div class="header">
-        <h1><i class="fa-solid fa-server"></i> Gerador de Lista M3U</h1>
-        <p>Conexão direta com a matriz (Sem filtros)</p>
+        <h1><i class="fa-solid fa-tv"></i> Extrator de Live TV (M3U)</h1>
+        <p>Filtra e remove VOD/Séries do servidor à força</p>
     </div>
 
-    <form id="iptvForm" onsubmit="event.preventDefault(); generateList();">
+    <form id="iptvForm" onsubmit="event.preventDefault(); processM3U();">
         <div class="form-group">
-            <label for="serverUrl">URL do Servidor</label>
+            <label>URL do Servidor</label>
             <input type="url" id="serverUrl" placeholder="Ex: http://cms.servidor.tv:8080" required>
         </div>
         <div class="form-group">
-            <label for="username">Usuário</label>
+            <label>Usuário</label>
             <input type="text" id="username" placeholder="Digite o usuário" required>
         </div>
         <div class="form-group">
-            <label for="password">Senha</label>
+            <label>Senha</label>
             <input type="text" id="password" placeholder="Digite a senha" required>
         </div>
-        <div class="form-group">
-            <label for="listType">Tipo de M3U</label>
-            <select id="listType">
-                <option value="m3u_plus">M3U Plus (Com Logos e Categorias - Recomendado)</option>
-                <option value="m3u">M3U Básico (Maior compatibilidade com servidores antigos)</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="outputFormat">Formato de Saída</label>
-            <select id="outputFormat">
-                <option value="ts">MPEGTS (.ts)</option>
-                <option value="m3u8">HLS (.m3u8)</option>
-            </select>
-        </div>
-        <button type="submit" class="btn">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Link M3U
+        
+        <button type="submit" class="btn" id="submitBtn">
+            <i class="fa-solid fa-filter"></i> Processar e Limpar Lista
         </button>
+        <div class="status" id="statusText">Aguarde, baixando e limpando a lista... isso pode levar alguns segundos.</div>
     </form>
 
     <div class="result-box" id="resultBox">
-        <h3><i class="fa-solid fa-link"></i> Sua Lista:</h3>
-        <textarea id="resultText" readonly></textarea>
-        
-        <div class="actions">
-            <button type="button" class="btn-small btn-copy" onclick="copyResult()">
-                <i class="fa-regular fa-copy"></i> Copiar URL
-            </button>
-            <a id="downloadBtn" class="btn-small btn-download" href="#" target="_blank">
-                <i class="fa-solid fa-download"></i> Testar / Baixar
-            </a>
-        </div>
+        <h3 style="color: var(--success); margin-bottom: 10px;"><i class="fa-solid fa-check-circle"></i> Lista de Canais Limpa!</h3>
+        <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 10px;" id="statsText"></p>
+        <a id="downloadBtn" class="btn-download" href="#" download="canais_ao_vivo.m3u">
+            <i class="fa-solid fa-download"></i> Baixar M3U (Apenas Canais)
+        </a>
     </div>
 </div>
 
 <script>
-    function generateList() {
-        let server = document.getElementById('serverUrl').value.trim().replace(/\s/g, '');
+    async function processM3U() {
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('statusText');
+        const resultBox = document.getElementById('resultBox');
+        
+        let server = document.getElementById('serverUrl').value.trim().replace(/\s/g, '').replace(/\/$/, '');
+        if(!server.startsWith('http')) server = 'http://' + server;
         let user = document.getElementById('username').value.trim().replace(/\s/g, '');
         let pass = document.getElementById('password').value.trim().replace(/\s/g, '');
-        let listType = document.getElementById('listType').value;
-        let outputFormat = document.getElementById('outputFormat').value;
 
-        if(!server || !user || !pass) return;
-
-        if(server.endsWith('/')) server = server.slice(0, -1);
-        if(!server.startsWith('http://') && !server.startsWith('https://')) server = 'http://' + server;
-
-        // URL Pura, sem VOD=0, garantindo que o servidor entregue o arquivo
-        let generatedUrl = `${server}/get.php?username=${user}&password=${pass}&type=${listType}&output=${outputFormat}`;
-
-        document.getElementById('resultBox').style.display = 'block';
-        let resultText = document.getElementById('resultText');
-        resultText.value = generatedUrl;
+        // Monta a URL base do painel (M3U Plus)
+        let rawUrl = `${server}/get.php?username=${user}&password=${pass}&type=m3u_plus&output=ts`;
         
-        let downloadBtn = document.getElementById('downloadBtn');
-        downloadBtn.href = generatedUrl;
-        
-        document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+        // Usamos um proxy gratuito para evitar o bloqueio de CORS do navegador
+        let proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rawUrl);
 
-    function copyResult() {
-        let resultText = document.getElementById('resultText');
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(resultText.value).then(() => {
-                alert("URL copiada!");
-            }).catch(err => { fallbackCopyTextToClipboard(resultText); });
-        } else {
-            fallbackCopyTextToClipboard(resultText);
+        btn.disabled = true;
+        status.style.display = 'block';
+        resultBox.style.display = 'none';
+
+        try {
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Falha na conexão com o servidor");
+            const text = await response.text();
+
+            // Lógica de Limpeza: Separa o texto em linhas
+            const lines = text.split('\n');
+            let cleanM3uLines = ['#EXTM3U'];
+            let currentExtinf = '';
+            let liveCount = 0;
+            let removedCount = 0;
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                
+                if (line.startsWith('#EXTINF')) {
+                    currentExtinf = line; // Guarda a linha de info
+                } else if (line.startsWith('http')) {
+                    // O pulo do gato: No Xtream Codes, VODs contêm "/movie/" ou "/series/" no link, ou terminam em formato de vídeo
+                    let isVodOrSeries = line.includes('/movie/') || line.includes('/series/') || line.match(/\.(mp4|mkv|avi)$/i);
+                    
+                    if (!isVodOrSeries) {
+                        if (currentExtinf) cleanM3uLines.push(currentExtinf);
+                        cleanM3uLines.push(line);
+                        liveCount++;
+                    } else {
+                        removedCount++;
+                    }
+                    currentExtinf = ''; // Reseta para a próxima leitura
+                }
+            }
+
+            // Transforma o texto filtrado em um arquivo físico virtual
+            const blob = new Blob([cleanM3uLines.join('\n')], { type: 'text/plain' });
+            const urlBlob = URL.createObjectURL(blob);
+
+            document.getElementById('statsText').innerText = `Canais mantidos: ${liveCount} | Filmes/Séries removidos: ${removedCount}`;
+            document.getElementById('downloadBtn').href = urlBlob;
+            
+            resultBox.style.display = 'block';
+
+        } catch (error) {
+            alert("Erro ao processar a lista. O servidor pode estar bloqueando a leitura externa ou os dados estão incorretos.");
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+            status.style.display = 'none';
         }
-    }
-
-    function fallbackCopyTextToClipboard(textArea) {
-        textArea.focus();
-        textArea.select();
-        textArea.setSelectionRange(0, 99999);
-        try { document.execCommand('copy'); alert("URL copiada!"); } 
-        catch (err) { alert("Erro ao copiar."); }
     }
 </script>
 
